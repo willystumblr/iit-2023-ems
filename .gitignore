@@ -1,0 +1,10 @@
+2023_DATA/
+datasets/
+receits/
+test/
+train/
+weather-dataset/
+docs/
+test_meteorological.csv
+test.zip
+__pycache__/
