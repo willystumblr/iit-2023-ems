@@ -1,0 +1,11 @@
+Hyperparameters:
+	learning_rate: 0.001
+	batch_size: 64
+	num_epochs: 150
+	hidden_dim: 128
+	n_layers: 5
+
+Metrics:
+	MAE: 0.020321622490882874
+	MSE: 0.0024605749640613794
+	RMSE: 0.04960418292907746
