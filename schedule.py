@@ -3,13 +3,20 @@ import pulp as pl
 import argparse
 import numpy as np
 from typing import Any 
+import math
+
+ELEC_PRICE = [38.8]*9+[53.0]+[72.8]*2+[53.0]+[72.8]*4+[53.0]*6+[38.8]
+LOAD_PATH = "PATH_TO_LOAD_PREDICTION"
+PV_PATH="pv_pred/summed.csv"
+
 
 parser = argparse.ArgumentParser(description="Scheduler Mode")
 parser.add_argument('--mode', type=str, 
+                    default='test',
                     help="'test' for test with arbitary input, 'eval' for actual evaluation.")
 
 args = parser.parse_args()
-ELEC_PRICE = [38.8]*9+[53.0]+[72.8]*2+[53.0]+[72.8]*4+[53.0]*6+[38.8]
+
 
 # Define the problem
 prob = pl.LpProblem("ESS_Scheduling", pl.LpMinimize)
@@ -65,20 +72,28 @@ def define_problem(prob: Any,
   
     return prob
 
+pv_gen = np.empty(24,)
+load = np.empty(24,)
+
+
 if args.mode == 'test':
+    print("Test mode: Optimal electricity bill for a random building")
+    load = np.array([
+            358,386, 409.6, 432.8,456.5,480.5,
+            502.7,520.2, 531.7,534.9,531, 518.5,500.5,476.6,449.1,422.4,398,
+            375.6,358.6,346.2,336.1, 328.2,322.1,318.1], dtype=float) # create arbitrary value
+    pv_gen = pd.read_csv("./pv_pred/LG도서관.csv").values.flatten() # get arbitrary building
     
-    load = pd.DataFrame({"Prediction":[
-    358,386, 409.6, 432.8,456.5,480.5,
-    502.7,520.2, 531.7,534.9,531, 518.5,500.5,476.6,449.1,422.4,398,
-    375.6,358.6,346.2,336.1, 328.2,322.1,318.1]
-    }
-    )
-    pv_gen = pd.read_csv("./pred/LG도서관.csv")
 elif args.mode == 'eval':
     ###TO DO: combine!###
-    pass
+    pv_gen = pd.read_csv(PV_PATH).values.flatten()
+    load = pd.read_csv(LOAD_PATH).values.flatten()
+
+else:
+    raise ValueError("only 'test' or 'eval' accepted")   
     
-prob = define_problem(electricity_price=ELEC_PRICE, load=load.values, pv_gen=pv_gen.values)
+    
+prob = define_problem(prob, electricity_price=ELEC_PRICE, load=load, pv_gen=pv_gen)
 # Solve the problem   
 prob.solve()
     
@@ -86,5 +101,5 @@ prob.solve()
 print(f"Status: {pl.LpStatus[prob.status]}")
 
 # Print the optimized objective function value
-print(f"Optimized Cost: {pl.value(prob.objective)}")
+print(f"Optimized Cost: {round(pl.value(prob.objective))}")
     
