@@ -1,4 +1,7 @@
+2022_DATA/
 2023_DATA/
+dataset/
+dataset_example/
 datasets/
 receits/
 test/
@@ -8,3 +11,5 @@ docs/
 test_meteorological.csv
 test.zip
 __pycache__/
+
+
