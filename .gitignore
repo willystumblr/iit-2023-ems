@@ -12,4 +12,5 @@ test_meteorological.csv
 test.zip
 __pycache__/
 
-
+load/data/dataset_MWH/
+load/data/dataset_KW/
