@@ -77,12 +77,9 @@ load = np.empty(24,)
 
 
 if args.mode == 'test':
-    print("Test mode: Optimal electricity bill for a random building")
-    load = np.array([
-            358,386, 409.6, 432.8,456.5,480.5,
-            502.7,520.2, 531.7,534.9,531, 518.5,500.5,476.6,449.1,422.4,398,
-            375.6,358.6,346.2,336.1, 328.2,322.1,318.1], dtype=float) # create arbitrary value
-    pv_gen = pd.read_csv("./pv_pred/LG도서관.csv").values.flatten() # get arbitrary building
+    print("Test mode: Optimal electricity bill for 08/31/2022")
+    load = pd.read_csv('./load/test-083022.csv').values.flatten() # create arbitrary value
+    pv_gen = pd.read_csv("pv_pred/test-083022.csv").values.flatten() # get arbitrary building
     
 elif args.mode == 'eval':
     ###TO DO: combine!###
