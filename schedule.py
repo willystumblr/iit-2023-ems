@@ -6,7 +6,7 @@ from typing import Any
 import math
 
 ELEC_PRICE = [38.8]*9+[53.0]+[72.8]*2+[53.0]+[72.8]*4+[53.0]*6+[38.8]
-LOAD_PATH = "PATH_TO_LOAD_PREDICTION"
+LOAD_PATH = "load/predict_for_0901.xlsx"
 PV_PATH="pv_pred/summed.csv"
 
 
@@ -87,7 +87,7 @@ if args.mode == 'test':
 elif args.mode == 'eval':
     ###TO DO: combine!###
     pv_gen = pd.read_csv(PV_PATH).values.flatten()
-    load = pd.read_csv(LOAD_PATH).values.flatten()
+    load = pd.read_excel(LOAD_PATH, usecols='BF', header=0).values.flatten()
 
 else:
     raise ValueError("only 'test' or 'eval' accepted")   
