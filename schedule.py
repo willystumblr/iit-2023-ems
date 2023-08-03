@@ -84,7 +84,7 @@ if args.mode == 'test':
 elif args.mode == 'eval':
     ###TO DO: combine!###
     pv_gen = pd.read_csv(PV_PATH).values.flatten()
-    load = pd.read_excel(LOAD_PATH, usecols='BF', header=0).values.flatten()
+    load = pd.read_excel(LOAD_PATH, usecols='BE', header=0).values.flatten()
 
 else:
     raise ValueError("only 'test' or 'eval' accepted")   

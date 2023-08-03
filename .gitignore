@@ -11,5 +11,6 @@ docs/
 test_meteorological.csv
 test.zip
 __pycache__/
-
-
+load/
+.gitignore
+train.zip
