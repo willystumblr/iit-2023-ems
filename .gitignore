@@ -14,3 +14,5 @@ __pycache__/
 load/
 .gitignore
 train.zip
+load/data/dataset_MWH/
+load/data/dataset_KW/
