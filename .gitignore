@@ -16,3 +16,5 @@ load/
 train.zip
 load/data/dataset_MWH/
 load/data/dataset_KW/
+.vscode/
+.DS_Store
