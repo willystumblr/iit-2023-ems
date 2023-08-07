@@ -54,11 +54,11 @@ def define_problem(prob: Any,
     # Constraints
     for i in range(num_hours):
         # Energy balance
-        prob += pv_gen[i] + energy_bought[i] == load[i] + energy_charged[i] + energy_sold[i]
+        prob += pv_gen[i] + energy_bought[i] + energy_discharged[i]*efficiency == load[i] + energy_charged[i] + energy_sold[i] + energy_charged[i]/efficiency
 
         # Battery charging and discharging
         prob += energy_charged[i] <= max_capacity - battery_level[i]
-        prob += energy_discharged[i] * efficiency <= battery_level[i+1]
+        prob += energy_discharged[i] <= battery_level[i+1]
 
     # Battery level update
         if i < num_hours - 1:
