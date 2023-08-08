@@ -1,18 +1,23 @@
-2022_DATA/
-2023_DATA/
-dataset/
-dataset_example/
-datasets/
-receits/
-test/
-train/
-weather-dataset/
-docs/
-test_meteorological.csv
-test.zip
-__pycache__/
-train.zip
-load/data/dataset_MWH/
-load/data/dataset_KW/
+# common
 .vscode/
 .DS_Store
+__pycache__/
+
+# ignore for pv
+/dataset/
+/datasets/
+/receits/
+/test/
+/train/
+/weather-dataset/
+/docs/
+test_meteorological.csv
+test.zip
+train.zip
+
+# ignore for load
+/load/data/dataset_MWH/
+/load/data/dataset_KW/
+/load/data/2022_DATA/
+/load/data/2023_DATA/
+/load/results/
