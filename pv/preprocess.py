@@ -1,7 +1,7 @@
 import glob
 import pandas as pd
 from tqdm import tqdm
-from fix import fix_pvdata, fix_weather, PATH
+from pv.fix import fix_pvdata, fix_weather, PATH
 
 for file in tqdm(glob.glob(PATH+"/*.csv")):
     data = pd.read_csv(file)
