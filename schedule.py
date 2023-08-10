@@ -6,8 +6,8 @@ from typing import Any
 import math
 
 ELEC_PRICE = [38.8]*9+[53.0]+[72.8]*2+[53.0]+[72.8]*4+[53.0]*6+[38.8]
-LOAD_PATH = "load/predict_for_0901.xlsx"
-PV_PATH="pv_pred/summed.csv"
+LOAD_PATH = "load_predict_for_0831.xlsx"
+PV_PATH="pv_predict_for_0831.csv"
 
 
 parser = argparse.ArgumentParser(description="Scheduler Mode")
@@ -54,7 +54,7 @@ def define_problem(prob: Any,
     # Constraints
     for i in range(num_hours):
         # Energy balance
-        prob += pv_gen[i] + energy_bought[i] + energy_discharged[i]*efficiency == load[i] + energy_charged[i] + energy_sold[i] + energy_charged[i]/efficiency
+        prob += pv_gen[i] + energy_bought[i] + energy_discharged[i]*efficiency == load[i] + energy_charged[i] + energy_sold[i] + energy_charged[i]* (1/efficiency)
 
         # Battery charging and discharging
         prob += energy_charged[i] <= max_capacity - battery_level[i]
@@ -83,8 +83,8 @@ if args.mode == 'test':
     
 elif args.mode == 'eval':
     ###TO DO: combine!###
-    pv_gen = pd.read_csv(PV_PATH).values.flatten()
-    load = pd.read_excel(LOAD_PATH, usecols='BE', header=0).values.flatten()
+    pv_gen = pd.read_csv(PV_PATH).sum(axis=1)
+    load = pd.read_excel(LOAD_PATH).sum(axis=1)
 
 else:
     raise ValueError("only 'test' or 'eval' accepted")   

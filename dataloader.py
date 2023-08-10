@@ -78,37 +78,41 @@ class SolarDataset(Dataset):
         return self.sequences[idx], self.labels[idx].squeeze()
 
 
-class TimeSeriesDataset_forPredict(Dataset):
-    def __init__(self, dataframe, seq_len=7*24):
-        self.seq_len = seq_len
+# 시계열 데이터를 처리하는 클래스를 정의합니다.
+class TimeSeriesDataset(Dataset):
+    def __init__(self, dataframe, seq_len=7*24, pred_len=24):
+        self.seq_len = seq_len  # 입력 시퀀스의 길이를 정의합니다.
+        self.pred_len = pred_len  # 예측할 시퀀스의 길이를 정의합니다.
+        self.scaler = MinMaxScaler()  # 데이터 정규화를 위한 MinMaxScaler 객체를 생성합니다.
 
-        self.dataframe = self._preprocess(dataframe)
+        self.dataframe = self._preprocess(dataframe)  # 데이터 전처리 함수를 호출하여 dataframe을 전처리합니다.
 
     def _preprocess(self, df):
-        # If there are any missing values, fill them with the previous value in time-series
+        # 누락된 값을 시계열의 이전 값으로 채웁니다.
         df.fillna(method='ffill', inplace=True)
 
-        # Normalize numerical columns to range [0, 1]
-        scaler = MinMaxScaler()
+        # 숫자형 열을 [0, 1] 범위로 정규화합니다.
         numerical_cols = df.select_dtypes(include=[np.number]).columns
-        df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
+        df[numerical_cols] = self.scaler.fit_transform(df[numerical_cols])
 
-        # One-hot encode categorical variables
+        # 범주형 변수를 원-핫 인코딩합니다.
         categorical_cols = df.select_dtypes(include=['object']).columns
         if not categorical_cols.empty:
             encoder = OneHotEncoder()
             encoded = encoder.fit_transform(df[categorical_cols])
             encoded_df = pd.DataFrame(encoded.toarray(), columns=encoder.get_feature_names(categorical_cols))
             
-            # Drop original categorical columns and merge with encoded ones
+            # 원래의 범주형 열을 삭제하고 인코딩된 열과 병합합니다.
             df.drop(columns=categorical_cols, inplace=True)
             df = pd.concat([df, encoded_df], axis=1)
         
         return df
 
     def __len__(self):
-        return max(0, len(self.dataframe) - self.seq_len + 1)
+        return len(self.dataframe) - self.seq_len - self.pred_len + 1  # 데이터셋의 전체 길이를 반환합니다.
 
     def __getitem__(self, idx):
-        x = self.dataframe.iloc[idx:idx+self.seq_len]
-        return torch.Tensor(x.values)  # return only x values
+        x = self.dataframe.iloc[idx:idx+self.seq_len, :7]  # 입력 시퀀스의 앞 7열만 선택합니다.
+        # 마지막 56열이 전력 값이라고 가정하고 예측할 시퀀스를 선택합니다.
+        y = self.dataframe.iloc[idx+self.seq_len:idx+self.seq_len+self.pred_len, -56:] 
+        return torch.Tensor(x.values), torch.Tensor(y.values).reshape(-1)  # y 값을 평탄화하여 반환합니다.
