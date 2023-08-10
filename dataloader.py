@@ -10,13 +10,13 @@ from sklearn.compose import ColumnTransformer
 class SolarDataset(Dataset):
     def __init__(self, dataframe, seq_len=7*24):
         self.seq_len = seq_len
+        self.scaler = MinMaxScaler()
+        self.y_scaler = MinMaxScaler()        
         self.sequences, self.labels = self._preprocess(dataframe)
         
         
         
     def _preprocess(self, dataframe):
-        scaler = MinMaxScaler()
-        y_scaler = MinMaxScaler()
         # Separate numerical and categorical features
         numerical_features = ['시간당발전량(kWh)', '수평면(w/㎡)', '경사면(w/㎡)', '모듈온도(℃)', '기온(°C)', '습도(%)',
                            '증기압(hPa)', '이슬점온도(°C)', '현지기압(hPa)', '일조(hr)',
@@ -28,7 +28,7 @@ class SolarDataset(Dataset):
         # Create a Column Transformer to handle numerical and categorical columns
         preprocessor = ColumnTransformer(
         transformers=[
-            ('num', scaler, numerical_features),
+            ('num', self.scaler, numerical_features),
             ('cat', 'passthrough', categorical_features),
             ('cyc', 'passthrough', cyclic_preprocessed)
         ])
@@ -47,7 +47,7 @@ class SolarDataset(Dataset):
             dataframe = cyclical_encode(dataframe, feature, max_val)
 
         X_preprocessed = preprocessor.fit_transform(dataframe)
-        y_preprocessed = y_scaler.fit_transform(dataframe['시간당발전량(kWh)'].to_numpy().reshape(-1,1))
+        y_preprocessed = self.y_scaler.fit_transform(dataframe['시간당발전량(kWh)'].to_numpy().reshape(-1,1))
         
         # Convert the preprocessed data into a PyTorch tensor
         X_tensor = torch.tensor(X_preprocessed, dtype=torch.float32)

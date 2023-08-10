@@ -41,8 +41,7 @@ def load_checkpoint(ckpt_path: str, hp_path: str):
     with open(hp_path, 'rb') as f:
         results = pickle.load(f)
     
-    hyperparameters = results['Hyperparameters']
-    scalers = results['Scalers']    
+    hyperparameters = results['Hyperparameters']  
         
     config = {
         'input_size': 17 if args.mode=='pv' else 7,
@@ -59,9 +58,9 @@ def load_checkpoint(ckpt_path: str, hp_path: str):
     )
     checkpoint = torch.load(ckpt_path, map_location=torch.device('cpu'))
     model.load_state_dict(checkpoint['model_state_dict'] if args.mode=='pv' else checkpoint) # else model.load_state_dict(torch.load(ckpt_path, map_location=torch.device('cpu')))
-    return model, scalers
+    return model
 
-def pv_predict(datapath: str, model, scaler):
+def pv_predict(datapath: str, model):
     model.eval()
     
     df = pd.read_csv(datapath)
@@ -73,15 +72,15 @@ def pv_predict(datapath: str, model, scaler):
         pred = model(seq)
         prediction_array = pred.detach().cpu().numpy()
         target_array = label.detach().cpu().numpy()
-        prediction = scaler.inverse_transform(prediction_array)
-        target = scaler.inverse_transform(target_array)
+        prediction = dataset.y_scaler.inverse_transform(prediction_array)
+        target = dataset.y_scaler.inverse_transform(target_array)
         rounded_data = np.maximum(prediction, 0.0).reshape(-1,1)
         
     return rounded_data.flatten(), target.flatten()
     
 
 
-def load_predict(datapath: str, model, scalers):
+def load_predict(datapath: str, model):
     
     df = pd.read_excel(datapath)
     dataset = TimeSeriesDataset(df)
@@ -157,18 +156,17 @@ if __name__=='__main__':
     """
     logger.info("Predicting {} for {}...".format(args.mode.upper(), TARGET_DAY))
     if args.mode == 'load':
-        model, scaler = load_checkpoint(LOAD_CKPT, LOAD_HP)
-        load_predict(LOAD_TEST, model, scaler)
+        model = load_checkpoint(LOAD_CKPT, LOAD_HP)
+        load_predict(LOAD_TEST, model)
     elif args.mode == 'pv':
         models = dict()
-        scalers = dict()
         predictions = dict()
         target = dict()
         
         for ckpt, hp, datapath in zip(sorted(glob.glob(PV_CKPT)), sorted(glob.glob(PV_HP)), sorted(glob.glob(PV_TEST))):
             b = ckpt.split("/")[-1].split("-")[0]
-            models[b], scalers[b] = load_checkpoint(ckpt, hp)
-            predictions[b], target[b] = pv_predict(datapath, models[b], scalers[b])
+            models[b] = load_checkpoint(ckpt, hp)
+            predictions[b], target[b] = pv_predict(datapath, models[b])
         
         error = pd.DataFrame(target)-pd.DataFrame(predictions)
         logger.info(f"Total Prediction Error: {error.sum().sum()}")
