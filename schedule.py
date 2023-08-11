@@ -98,5 +98,5 @@ prob.solve()
 print(f"Status: {pl.LpStatus[prob.status]}")
 
 # Print the optimized objective function value
-print(f"Optimized Cost: {round(pl.value(prob.objective))}")
+print(f"Optimized Cost: ₩{round(pl.value(prob.objective)):,}")
     
