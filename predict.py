@@ -36,6 +36,7 @@ parser.add_argument('--mode', type=str, required=True,
 
 args = parser.parse_args()
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load_checkpoint(ckpt_path: str, hp_path: str):
     with open(hp_path, 'rb') as f:
@@ -56,7 +57,7 @@ def load_checkpoint(ckpt_path: str, hp_path: str):
         config['num_layers'], 
         config['output_size']
     )
-    checkpoint = torch.load(ckpt_path, map_location=torch.device('cpu'))
+    checkpoint = torch.load(ckpt_path, map_location=device)
     model.load_state_dict(checkpoint['model_state_dict'] if args.mode=='pv' else checkpoint) # else model.load_state_dict(torch.load(ckpt_path, map_location=torch.device('cpu')))
     return model
 
@@ -69,7 +70,7 @@ def pv_predict(datapath: str, model):
     
     
     for seq, label in eval_loader:
-        pred = model(seq)
+        pred = model(seq.to(device))
         prediction_array = pred.detach().cpu().numpy()
         target_array = label.detach().cpu().numpy()
         prediction = dataset.y_scaler.inverse_transform(prediction_array)
