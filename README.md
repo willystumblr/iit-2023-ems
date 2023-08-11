@@ -17,6 +17,57 @@ pip install -r requirements.txt
 
 ## Files & Program execution
 
+### Directories and Files
+
+```plaintext
+.
+├── README.md
+├── dataloader.py
+├── model.py
+├── predict.py     ### FOR EXECUTION ###
+├── requirements.txt
+├── schedule.py    ### FOR EXECUTION ###
+├── load
+│   ├── log_optuna.txt
+│   ├── main.ipynb
+│   ├── pickleviewer.ipynb
+│   ├── predict.ipynb
+│   ├── best_results
+│   │   ├── 20230807_165319.pkl
+│   │   └── model_20230807_165319.pt
+│   └── data
+│       ├── merged_data_KW.xlsx
+│       ├── merged_data_MWH.xlsx
+│       ├── preprocessing.ipynb
+│       ├── test_for_0901.xlsx
+│       ├── test_for_0901_withseq.xlsx
+│       └── dataset_example
+│           └── 2022-08-31.xlsx
+└── pv
+    ├── \010ict_2023_model_predict.ipynb
+    ├── eda.ipynb
+    ├── fix.py
+    ├── preprocess.py
+    ├── checkpoints
+    │   ├── LG도서관-checkpoint-2023-08-10 22_10.pt
+    │   ├── 대학C동-checkpoint-2023-08-10 22_35.pt
+    │   ├── ...
+    │   ├── 중앙도서관-checkpoint-2023-08-10 23_26.pt
+    │   └── 신재생에너지동-checkpoint-2023-08-10 23_18.pt
+    ├── eval_sequence
+    │   ├── LG도서관-eval.csv
+    │   ├── 대학C동-eval.csv
+    │   ├── ...
+    │   ├── 삼성환경동-eval.csv
+    │   └── 신재생에너지동-eval.csv
+    └── results
+        ├── LG도서관-2023-08-11-hp.pkl
+        ├── 대학C동-2023-08-11-hp.pkl
+        ├── ...
+        ├── 중앙도서관-2023-08-11-hp.pkl
+        └── 신재생에너지동-2023-08-11-hp.pkl
+```
+
 ### 예측 알고리즘
 
 LSTM 모델을 사용하여, 다음날 24시간의 시간당 발전량/전력사용량 예측을 위해 지난 일주일간의 시간대별 데이터로 학습한다. 손실을 줄이기 위해, 비교적 건물 수가 14개로 적었던 태양광 발전량 데이터는 건물별로 모델을 생성하여 학습하였으며, 건물 수가 많았던(56) 부하 데이터의 경우 컴퓨팅 자원의 한계와 실행시간의 비효율성을 고려하여 건물을 하나의 feature로 설정한다.
@@ -48,8 +99,8 @@ LSTM 모델을 사용하여, 다음날 24시간의 시간당 발전량/전력사
 저장된 체크포인트와 미리 저장한 검증 데이터셋을 활용, `predict.py`를 실행하여 **2022.08.31**의 시간당 전력사용량 및 태양광 발전량을 예측한다.
 
 ```bash
-python predict.py --mode pv
-python predict.py --mode load
+python predict.py --mode pv     ## prediction for PV generation
+python predict.py --mode load   ## prediction for load
 ```
 
 ### 스케줄링 알고리즘
