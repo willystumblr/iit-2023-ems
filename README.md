@@ -78,19 +78,19 @@ LSTM 모델을 사용하여, 다음날 24시간의 시간당 발전량/전력사
   - 태양광 발전량 예측모델:
     ```python
     config ={
-    	"num_layers":7,
-    	"hidden_size":128,
-    	"batch_size":128,
-    	"num_epochs":200
+    	"num_layers":9,
+    	"hidden_size":32,
+    	"batch_size":256,
+    	"num_epochs":100
     }
     ```
   - 부하 예측 모델
     ```python
     config ={
-    	"num_layers": ,
-    	"hidden_size": ,
-    	"batch_size": ,
-    	"num_epochs": 
+    	"num_layers": 5,
+    	"hidden_size": 128,
+    	"batch_size": 128,
+    	"num_epochs": 700
     }
     ```
 
@@ -134,3 +134,28 @@ python predict.py --mode load   ## prediction for load
 ```python
 python schedule.py --mode eval
 ```
+
+## Results
+
+정확한 결과를 위해 다음 두 환경에서 실험하였다.
+
+- conda 가상환경 (Apple M1 core, CPU), python 3.9.17 버전
+- Google Colaboratory 환경, V100 GPU 1장, python 3.10.12 버전
+
+CPU 환경에서 `predict.py` 로 태양광 발전량/부하를 예측한 결과는 다음과 같다. 여기서 `Total Prediction Error`의 단위는 kWh이다.
+
+```plaintext
+(ict-2023) minsk@Maximus 2023ict % python predict.py --mode pv  
+08/13/2023 01:03:18 - INFO - __main__ -   Predicting PV for 0831...
+08/13/2023 01:03:18 - INFO - __main__ -   MAE: 8.0234, MSE: 143.0949, RMSE: 11.9622 (no normalization)
+08/13/2023 01:03:18 - INFO - __main__ -   Total Prediction Error: 279.2447814941406
+08/13/2023 01:03:18 - INFO - __main__ -   Prediction completed. filepath: ./pv_predict_for_0831.csv
+(ict-2023) minsk@Maximus 2023ict % python predict.py --mode load
+08/13/2023 01:03:23 - INFO - __main__ -   Predicting LOAD for 0831...
+torch.Size([1, 1344]) torch.Size([1, 1344])
+08/13/2023 01:03:24 - INFO - __main__ -   MAE: 16.4693, MSE: 1237.4397, RMSE: 35.1773 (no normalization)
+08/13/2023 01:03:24 - INFO - __main__ -   Total Prediction Error: 428.0094988500473
+08/13/2023 01:03:24 - INFO - __main__ -   Prediction completed. filepath: ./load_predict_for_0831.xlsx
+```
+
+CPU 환경에서 `schedule.py`로 2022년 8월 31일 전기요금을 최적화한 결과는 아래와 같으며, **₩43,234,599**로 계산된다.
