@@ -26,7 +26,7 @@ LOAD_TEST = "./load/data/merged_data_KW.xlsx"
 PV_CKPT = "./pv/checkpoints/*.pt"
 PV_HP = "./pv/results/*.pkl"
 PV_TEST = "./pv/eval_sequence/*.csv"
-DEVICE = device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 TARGET_DAY ='0831'
 
 
@@ -36,7 +36,6 @@ parser.add_argument('--mode', type=str, required=True,
 
 args = parser.parse_args()
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load_checkpoint(ckpt_path: str, hp_path: str):
     with open(hp_path, 'rb') as f:
@@ -56,8 +55,8 @@ def load_checkpoint(ckpt_path: str, hp_path: str):
         config['hidden_size'], 
         config['num_layers'], 
         config['output_size']
-    )
-    checkpoint = torch.load(ckpt_path, map_location=device)
+    ).to(DEVICE)
+    checkpoint = torch.load(ckpt_path, map_location=DEVICE)
     model.load_state_dict(checkpoint['model_state_dict'] if args.mode=='pv' else checkpoint) # else model.load_state_dict(torch.load(ckpt_path, map_location=torch.device('cpu')))
     return model
 
@@ -70,7 +69,7 @@ def pv_predict(datapath: str, model):
     
     
     for seq, label in eval_loader:
-        pred = model(seq.to(device))
+        pred = model(seq.to(DEVICE))
         prediction_array = pred.detach().cpu().numpy()
         target_array = label.detach().cpu().numpy()
         prediction = dataset.y_scaler.inverse_transform(prediction_array)
@@ -97,7 +96,7 @@ def load_predict(datapath: str, model):
 
     # 예측을 수행합니다.
     with torch.no_grad():
-        prediction = model(real_sequence)
+        prediction = model(real_sequence.to(DEVICE)).detach().cpu()
 
     print(prediction.shape, real_target.shape)
     prediction = prediction.squeeze(0).reshape(24, 56).numpy()
@@ -135,7 +134,7 @@ def load_predict(datapath: str, model):
     mse_n = mean_squared_error(real_target, prediction)
     rmse_n = math.sqrt(mse_n)
     logger.info(f'MAE: {mae_n:.4f}, MSE: {mse_n:.4f}, RMSE: {rmse_n:.4f} (no normalization)')
-    logger.info(f"err_total: {err_total}")
+    logger.info(f"Total Prediction Error: {err_total}")
 
     
     # Save to Excel file
@@ -169,7 +168,14 @@ if __name__=='__main__':
             models[b] = load_checkpoint(ckpt, hp)
             predictions[b], target[b] = pv_predict(datapath, models[b])
         
+        pred = pd.DataFrame(predictions)
+        real = pd.DataFrame(target)
+        
+        mae = mean_absolute_error(real, pred)
+        mse = mean_squared_error(real, pred)
+        rmse = math.sqrt(mse)
         error = pd.DataFrame(target)-pd.DataFrame(predictions)
+        logger.info(f"MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f} (no normalization)")
         logger.info(f"Total Prediction Error: {error.sum().sum()}")
         
         output_filepath = os.path.join('.',f'{args.mode}_predict_for_'+TARGET_DAY+'.csv')
