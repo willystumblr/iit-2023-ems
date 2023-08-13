@@ -8,9 +8,10 @@ GIST 창의융합경진대회 2023 EMS-Track, MYsolar 팀 GitHub Repo
 
 > conda version: `23.1.0`
 
-설치 후, 가상환경 생성 및 패키치 다운로드
+`git clone` 으로 파일 다운로드후, 아나콘다 설치 및 가상환경 생성, 패키지 다운로드
 
 ```bash
+git clone https://github.com/willystumblr/ict-2023-ems.git
 conda create -n ENVIRONMENT_NAME python==3.9
 pip install -r requirements.txt
 ```
