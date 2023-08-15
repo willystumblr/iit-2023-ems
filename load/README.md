@@ -1,3 +1,10 @@
+## Methods
+
+시계열 데이터 학습을 위해 LSTM 모델을 사용하였으며, regularization 및 학습 효율성을 위해 Early Stopping method를 적용했기 때문에 epoch 수는 충분히 크도록 설정하면 된다. Optimizer로는 pytorch에서 제공하는 Adam을 사용했으며, 추가적으로 ReduceLROnPlateau scheduler를 적용했다. 이는 validation loss가 일정 epoch동안 감소하지 않을 경우 learning rate를 동적으로 감소시키게 된다. Early stopping과 동시에 사용하기 위해 patience 파라미터는 실험적으로 설정했고, 따라서 변경하지 않는 것이 좋다.
+
+* https://pytorch.org/docs/stable/generated/torch.optim.Adam.html
+* https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.ReduceLROnPlateau.html
+
 ## 각 파일에 대한 설명
 
 ```
@@ -19,7 +26,7 @@
 │           └── 2022-08-31.xlsx
 ```
 
-**모델 학습은 jupyter notebook을 사용하였다. 아래는 전반적인 코드 실행 과정에 대한 설명으로, 보다 자세한 사항은 각 코드의 주석을 참고하기를 바란다.**
+* **모델 학습은 jupyter notebook을 사용하였다. 아래부터는 전반적인 코드 실행 과정에 대한 설명으로, 보다 자세한 사항은 각 코드의 주석을 참고하기를 바란다.**
 
 ## 코드 실행 과정
 
