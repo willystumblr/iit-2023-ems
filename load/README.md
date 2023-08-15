@@ -1,9 +1,11 @@
 ## Methods
 
-시계열 데이터 학습을 위해 LSTM 모델을 사용하였으며, regularization 및 학습 효율성을 위해 Early Stopping method를 적용했기 때문에 epoch 수는 충분히 크도록 설정하면 된다. Optimizer로는 pytorch에서 제공하는 Adam을 사용했으며, 추가적으로 ReduceLROnPlateau scheduler를 적용했다. 이는 validation loss가 일정 epoch동안 감소하지 않을 경우 learning rate를 동적으로 감소시키게 된다. Early stopping과 동시에 사용하기 위해 patience 파라미터는 실험적으로 설정했고, 따라서 변경하지 않는 것이 좋다.
+ 시계열 데이터 학습을 위해 LSTM 모델을 사용하였으며, regularization 및 학습 효율성을 위해 Early Stopping method를 적용했기 때문에 epoch 수는 충분히 크도록 설정하면 된다. Optimizer로는 pytorch에서 제공하는 Adam을 사용했으며, 추가적으로 ReduceLROnPlateau scheduler를 적용했다. 이는 validation loss가 일정 epoch동안 감소하지 않을 경우 learning rate를 동적으로 감소시키게 된다. Early stopping과 동시에 사용하기 위해 patience 파라미터는 실험적으로 설정했고, 따라서 변경하지 않는 것이 좋다. 해당 reference는 아래 링크를 참고한다.
 
 * https://pytorch.org/docs/stable/generated/torch.optim.Adam.html
 * https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.ReduceLROnPlateau.html
+
+ 주어진 데이터셋은 train set, validation set, test set으로 구분하였으며 7:2:1 비율의 시퀀스별로 나누었다. 주어진 전력사용량 데이터셋을 확인해보면 총 56개의 건물에서 '산학협력연구동'과 '산학협력연구동(E)를 제외하고 54개의 건물이 MWH 단위의 유효전력량을 가지고 있는데, 문의한 결과 KWH로 되어있는 해당 2개의 건물도 MWH 단위가 맞다고 한다. 전력요금을 계산하기 위해서는 유효전력량(MWH)을 알아야하지만, 대회에서 제공한 데이터셋을 확인해본 결과 해당 값은 지금까지의 누적 값이며 천의 자리수에서 0으로 초기화되는 특성이 있었다. 따라서 본 모델 개발 과정에서는 유효전력(KW)를 예측하며, 이를 이용해 유효전력량 및 전기요금을 계산하도록 구현하였다. 또한 데이터셋은 학사 구역과 석사 구역으로 나뉘어져 있으며 SV-1, SV-2 등등 동일한 이름의 건물들이 존재했는데, 이는 모두 다른 건물로 취급한다.
 
 ## 각 파일에 대한 설명
 
