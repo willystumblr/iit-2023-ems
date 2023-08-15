@@ -76,7 +76,7 @@ def pv_predict(datapath: str, model):
         target = dataset.y_scaler.inverse_transform(target_array)
         rounded_data = np.maximum(prediction, 0.0).reshape(-1,1)
         
-    return rounded_data.flatten(), target.flatten()
+    return rounded_data.flatten(), target.flatten(), prediction_array.flatten(), target_array.flatten()
     
 
 
@@ -168,20 +168,32 @@ if __name__=='__main__':
         models = dict()
         predictions = dict()
         target = dict()
+        predictions_norm = dict()
+        target_norm = dict()
+        
         
         for ckpt, hp, datapath in zip(sorted(glob.glob(PV_CKPT)), sorted(glob.glob(PV_HP)), sorted(glob.glob(PV_TEST))):
             b = ckpt.split("/")[-1].split("-")[0]
             models[b] = load_checkpoint(ckpt, hp)
-            predictions[b], target[b] = pv_predict(datapath, models[b])
+            predictions[b], target[b], predictions_norm[b], target_norm[b] = pv_predict(datapath, models[b])
         
         pred = pd.DataFrame(predictions)
         real = pd.DataFrame(target)
+        pred_n = pd.DataFrame(predictions_norm)
+        real_n = pd.DataFrame(target_norm)
         
         mae = mean_absolute_error(real, pred)
         mse = mean_squared_error(real, pred)
         rmse = math.sqrt(mse)
+        
+        mae_n = mean_absolute_error(real_n, pred_n)
+        mse_n = mean_squared_error(real_n, pred_n)
+        rmse_n = math.sqrt(mse)
+        
+        
         error = pd.DataFrame(target)-pd.DataFrame(predictions)
         logger.info(f"MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f} (no normalization)")
+        logger.info(f'MAE_n: {mae_n:.4f}, MSE_n: {mse_n:.4f}, RMSE_n: {rmse_n:.4f} (normalization)')
         logger.info(f"Total Prediction Error: {error.sum().sum()}")
         
         output_filepath = os.path.join('.',f'{args.mode}_predict_for_'+TARGET_DAY+'.csv')
