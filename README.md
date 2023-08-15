@@ -146,22 +146,23 @@ python schedule.py --mode eval
 CPU 환경에서 `predict.py` 로 태양광 발전량/부하를 예측한 결과는 다음과 같다. 여기서 `Total Prediction Error`의 단위는 kWh이다.
 
 ```plaintext
-(ict-2023) minsk@Maximus 2023ict % python predict.py --mode pv  
-08/13/2023 01:03:18 - INFO - __main__ -   Predicting PV for 0831...
-08/13/2023 01:03:18 - INFO - __main__ -   MAE: 8.0234, MSE: 143.0949, RMSE: 11.9622 (no normalization)
-08/13/2023 01:03:18 - INFO - __main__ -   Total Prediction Error: 279.2447814941406
-08/13/2023 01:03:18 - INFO - __main__ -   Prediction completed. filepath: ./pv_predict_for_0831.csv
 (ict-2023) minsk@Maximus 2023ict % python predict.py --mode load
-08/13/2023 01:03:23 - INFO - __main__ -   Predicting LOAD for 0831...
-torch.Size([1, 1344]) torch.Size([1, 1344])
-08/13/2023 01:03:24 - INFO - __main__ -   MAE: 16.4693, MSE: 1237.4397, RMSE: 35.1773 (no normalization)
-08/13/2023 01:03:24 - INFO - __main__ -   Total Prediction Error: 428.0094988500473
-08/13/2023 01:03:24 - INFO - __main__ -   Prediction completed. filepath: ./load_predict_for_0831.xlsx
+08/16/2023 00:23:47 - INFO - __main__ -   Predicting LOAD for 0831...
+08/16/2023 00:23:47 - INFO - __main__ -   [Unnormalized] MAE: 16.4693, MSE: 1237.4397, RMSE: 35.1773
+08/16/2023 00:23:47 - INFO - __main__ -   [Normalized] MAE: 0.0581, MSE: 0.0077, RMSE: 0.0879
+08/16/2023 00:23:47 - INFO - __main__ -   Total Prediction Error: 428.0094988500473
+08/16/2023 00:23:47 - INFO - __main__ -   Prediction completed. filepath: ./load_predict_for_0831.xlsx
+(ict-2023) minsk@Maximus 2023ict % python predict.py --mode pv  
+08/16/2023 00:23:56 - INFO - __main__ -   Predicting PV for 0831...
+08/16/2023 00:23:56 - INFO - __main__ -   [Unnormalized] MAE: 8.0234, MSE: 143.0949, RMSE: 11.9622
+08/16/2023 00:23:56 - INFO - __main__ -   [Normalized] MAE: 0.1551, MSE: 0.0402, RMSE: 0.2004
+08/16/2023 00:23:56 - INFO - __main__ -   Total Prediction Error: 279.2447814941406
+08/16/2023 00:23:56 - INFO - __main__ -   Prediction completed. filepath: ./pv_predict_for_0831.csv
 ```
 
-**태양광 발전량 예측 오차는 MAE: ~, MSE: ~, RMSE: ~ 이다.**
+**전력부하량 예측 오차는 MAE: 0.0581, MSE: 0.0077, RMSE: 0.0879 이다.**
 
-**전력부하량 예측 오차는 MAE: ~, MSE: ~, RMSE: ~ 이다.**
+**태양광 발전량 예측 오차는 MAE: 0.1551, MSE: 0.0402, RMSE: 0.2004 이다.**
 
 CPU 환경에서 `schedule.py`로 2022년 8월 31일 전기요금을 최적화한 결과는 아래와 같으며, **₩43,234,599**로 계산된다.
 

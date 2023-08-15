@@ -103,7 +103,7 @@ def load_predict(datapath: str, model):
     mse = mean_squared_error(real_target, prediction)
     rmse = math.sqrt(mse)
 
-    print(prediction.shape, real_target.shape)
+    #print(prediction.shape, real_target.shape)
     prediction = prediction.squeeze(0).reshape(24, 56).numpy()
     real_target = real_target.view(24, 56).numpy()
 
@@ -138,8 +138,8 @@ def load_predict(datapath: str, model):
     mae_n = mean_absolute_error(real_target, prediction)
     mse_n = mean_squared_error(real_target, prediction)
     rmse_n = math.sqrt(mse_n)
-    logger.info(f'MAE_n: {mae_n:.4f}, MSE_n: {mse_n:.4f}, RMSE_n: {rmse_n:.4f} (no normalization)')
-    logger.info(f'MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f} (normalization)')
+    logger.info(f'[Unnormalized] MAE: {mae_n:.4f}, MSE: {mse_n:.4f}, RMSE: {rmse_n:.4f}')
+    logger.info(f'[Normalized] MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f}')
     logger.info(f"Total Prediction Error: {err_total}")
 
     
@@ -153,12 +153,9 @@ def load_predict(datapath: str, model):
 
 if __name__=='__main__':
     warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
-    pass
-    "***TO DO***"
     """
     PV_pred: load_checkpoint, pv_predict INSIDE the loop
     LOAD_pred: load_checkpoint, load_predict at once
-    
     """
     logger.info("Predicting {} for {}...".format(args.mode.upper(), TARGET_DAY))
     if args.mode == 'load':
@@ -188,12 +185,12 @@ if __name__=='__main__':
         
         mae_n = mean_absolute_error(real_n, pred_n)
         mse_n = mean_squared_error(real_n, pred_n)
-        rmse_n = math.sqrt(mse)
+        rmse_n = math.sqrt(mse_n)
         
         
         error = pd.DataFrame(target)-pd.DataFrame(predictions)
-        logger.info(f"MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f} (no normalization)")
-        logger.info(f'MAE_n: {mae_n:.4f}, MSE_n: {mse_n:.4f}, RMSE_n: {rmse_n:.4f} (normalization)')
+        logger.info(f"[Unnormalized] MAE: {mae:.4f}, MSE: {mse:.4f}, RMSE: {rmse:.4f}")
+        logger.info(f'[Normalized] MAE: {mae_n:.4f}, MSE: {mse_n:.4f}, RMSE: {rmse_n:.4f}')
         logger.info(f"Total Prediction Error: {error.sum().sum()}")
         
         output_filepath = os.path.join('.',f'{args.mode}_predict_for_'+TARGET_DAY+'.csv')
