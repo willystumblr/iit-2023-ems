@@ -8,7 +8,7 @@ GIST 창의융합경진대회 2023 EMS-Track, MYsolar 팀 GitHub Repo
 
 > conda version: `23.1.0`
 
-`git clone` 으로 파일 다운로드후, 아나콘다 설치 및 가상환경 생성, 패키지 다운로드
+`git clone` 으로 파일 다운로드후, 아나콘다 설치 및 가상환경 생성, 패키치 다운로드
 
 ```bash
 git clone https://github.com/willystumblr/ict-2023-ems.git
@@ -160,3 +160,34 @@ torch.Size([1, 1344]) torch.Size([1, 1344])
 ```
 
 CPU 환경에서 `schedule.py`로 2022년 8월 31일 전기요금을 최적화한 결과는 아래와 같으며, **₩43,234,599**로 계산된다.
+
+```plaintext
+Welcome to the CBC MILP Solver 
+Version: 2.10.3 
+Build Date: Dec 15 2019 
+
+command line - /Users/minsk/opt/anaconda3/envs/ict-2023/lib/python3.9/site-packages/pulp/solverdir/cbc/osx/64/cbc /var/folders/5m/_dn3q76s5zb9tr9xkr_8vtnh0000gn/T/c72eac47906b4b0ab130b4233eeb77a6-pulp.mps timeMode elapsed branch printingOptions all solution /var/folders/5m/_dn3q76s5zb9tr9xkr_8vtnh0000gn/T/c72eac47906b4b0ab130b4233eeb77a6-pulp.sol (default strategy 1)
+At line 2 NAME          MODEL
+At line 3 ROWS
+At line 102 COLUMNS
+At line 437 RHS
+At line 535 BOUNDS
+At line 561 ENDATA
+Problem MODEL has 97 rows, 121 columns and 286 elements
+Coin0008I MODEL read with 0 errors
+Option for timeMode changed from cpu to elapsed
+Presolve 91 (-6) rows, 115 (-6) columns and 273 (-13) elements
+Perturbing problem by 0.001% of 151.07957 - largest nonzero change 1.6838469e-05 ( 1.2727507e-05%) - largest zero change 1.6589949e-05
+0  Obj 42416730 Primal inf 8094.6687 (24) Dual inf 2511.075 (23)
+0  Obj 42416726 Primal inf 8094.6687 (24) Dual inf 3.5307098e+11 (47)
+60  Obj 42830738 Primal inf 3025.0365 (9) Dual inf 1.0902913e+11 (37)
+80  Obj 43234599
+Optimal - objective value 43234599
+After Postsolve, objective 43234599, infeasibilities - dual 0 (0), primal 0 (0)
+Optimal objective 43234598.6 - 80 iterations time 0.002, Presolve 0.00
+Option for printingOptions changed from normal to all
+Total time (CPU seconds):       0.00   (Wallclock seconds):       0.00
+
+Status: Optimal
+Optimized Cost: ₩43,234,599
+```
