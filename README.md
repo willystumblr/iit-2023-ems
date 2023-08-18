@@ -164,35 +164,46 @@ CPU 환경에서 `predict.py` 로 태양광 발전량/부하를 예측한 결과
 
 **태양광 발전량 예측 오차는 MAE: 0.1551, MSE: 0.0402, RMSE: 0.2004 이다.**
 
-CPU 환경에서 `schedule.py`로 2022년 8월 31일 전기요금을 최적화한 결과는 아래와 같으며, **₩43,234,599**로 계산된다.
+CPU 환경에서 `schedule.py`로 2022년 8월 31일 전기요금을 최적화한 결과는 아래와 같으며, **₩42,719,630**로 계산된다.
 
 ```plaintext
 Welcome to the CBC MILP Solver 
 Version: 2.10.3 
 Build Date: Dec 15 2019 
 
-command line - /Users/minsk/opt/anaconda3/envs/ict-2023/lib/python3.9/site-packages/pulp/solverdir/cbc/osx/64/cbc /var/folders/5m/_dn3q76s5zb9tr9xkr_8vtnh0000gn/T/c72eac47906b4b0ab130b4233eeb77a6-pulp.mps timeMode elapsed branch printingOptions all solution /var/folders/5m/_dn3q76s5zb9tr9xkr_8vtnh0000gn/T/c72eac47906b4b0ab130b4233eeb77a6-pulp.sol (default strategy 1)
+command line - /Users/minsk/opt/anaconda3/envs/ict-2023/lib/python3.9/site-packages/pulp/solverdir/cbc/osx/64/cbc /var/folders/5m/_dn3q76s5zb9tr9xkr_8vtnh0000gn/T/75c037db6b034528891e5fee551f8574-pulp.mps timeMode elapsed branch printingOptions all solution /var/folders/5m/_dn3q76s5zb9tr9xkr_8vtnh0000gn/T/75c037db6b034528891e5fee551f8574-pulp.sol (default strategy 1)
 At line 2 NAME          MODEL
 At line 3 ROWS
-At line 102 COLUMNS
-At line 437 RHS
-At line 535 BOUNDS
-At line 561 ENDATA
-Problem MODEL has 97 rows, 121 columns and 286 elements
+At line 126 COLUMNS
+At line 509 RHS
+At line 631 BOUNDS
+At line 657 ENDATA
+Problem MODEL has 121 rows, 121 columns and 334 elements
 Coin0008I MODEL read with 0 errors
 Option for timeMode changed from cpu to elapsed
-Presolve 91 (-6) rows, 115 (-6) columns and 273 (-13) elements
-Perturbing problem by 0.001% of 151.07957 - largest nonzero change 1.6838469e-05 ( 1.2727507e-05%) - largest zero change 1.6589949e-05
-0  Obj 42416730 Primal inf 8094.6687 (24) Dual inf 2511.075 (23)
-0  Obj 42416726 Primal inf 8094.6687 (24) Dual inf 3.5307098e+11 (47)
-60  Obj 42830738 Primal inf 3025.0365 (9) Dual inf 1.0902913e+11 (37)
-80  Obj 43234599
-Optimal - objective value 43234599
-After Postsolve, objective 43234599, infeasibilities - dual 0 (0), primal 0 (0)
-Optimal objective 43234598.6 - 80 iterations time 0.002, Presolve 0.00
-Option for printingOptions changed from normal to all
-Total time (CPU seconds):       0.00   (Wallclock seconds):       0.00
+Presolve determined that the problem was infeasible with tolerance of 1e-08
+Analysis indicates model infeasible or unbounded
+Perturbing problem by 0.001% of 151.07957 - largest nonzero change 0.00042522749 ( 0.00068925059%) - largest zero change 0.00030592583
+0  Obj 0 Primal inf 1198634.1 (50) Dual inf 1248.7934 (24)
+0  Obj 0 Primal inf 1198634.1 (50) Dual inf 5.9075233e+11 (50)
+63  Obj 21276139 Primal inf 956996.26 (33) Dual inf 2.3680067e+11 (41)
+94  Obj 42685794 Primal inf 802600.7 (24) Dual inf 4.3245042e+09 (1)
+95  Obj 42719630 Primal inf 802432.65 (24)
+Primal infeasible - objective value 42719630
+PrimalInfeasible objective 42719629.54 - 95 iterations time 0.002
 
-Status: Optimal
-Optimized Cost: ₩43,234,599
+Result - Linear relaxation infeasible
+
+Enumerated nodes:           0
+Total iterations:           0
+Time (CPU seconds):         0.00
+Time (Wallclock Seconds):   0.02
+
+Option for printingOptions changed from normal to all
+Total time (CPU seconds):       0.00   (Wallclock seconds):       0.02
+
+Status: Infeasible
+Optimized Cost: ₩42,719,630
 ```
+
+이에 해당하는 이미지는 scheduling_energy_plot.png, scheduling_soc_plot.png이다. PV 발전량이 Load에 비해 매우 작아, PV Generation과 Energy Sold는 거의 0에 가깝게 나타났다.
