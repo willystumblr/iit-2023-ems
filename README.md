@@ -152,6 +152,7 @@ CPU 환경에서 `predict.py` 로 태양광 발전량/부하를 예측한 결과
 08/16/2023 00:23:47 - INFO - __main__ -   [Normalized] MAE: 0.0581, MSE: 0.0077, RMSE: 0.0879
 08/16/2023 00:23:47 - INFO - __main__ -   Total Prediction Error: 428.0094988500473
 08/16/2023 00:23:47 - INFO - __main__ -   Prediction completed. filepath: ./load_predict_for_0831.xlsx
+
 (ict-2023) minsk@Maximus 2023ict % python predict.py --mode pv  
 08/16/2023 00:23:56 - INFO - __main__ -   Predicting PV for 0831...
 08/16/2023 00:23:56 - INFO - __main__ -   [Unnormalized] MAE: 8.0234, MSE: 143.0949, RMSE: 11.9622
@@ -160,11 +161,15 @@ CPU 환경에서 `predict.py` 로 태양광 발전량/부하를 예측한 결과
 08/16/2023 00:23:56 - INFO - __main__ -   Prediction completed. filepath: ./pv_predict_for_0831.csv
 ```
 
+2022년 8월 31일에 대해 평가했으며, 예측값 및 실제값에 대한 자세한 결과는 results 폴더 내의 **load_gt_for_0831_for_submit.csv(부하 실제값), load_predict_for_0831_for_submit.csv(부하 예측값), pv_gt_for_0831_for_submit.csv(태양광 실제값), pv_predict_for_0831_for_submit.csv(태양광 예측값)** 파일에서 확인할 수 있다.
+
 **전력부하량 예측 오차는 MAE: 0.0581, MSE: 0.0077, RMSE: 0.0879 이다.**
 
 **태양광 발전량 예측 오차는 MAE: 0.1551, MSE: 0.0402, RMSE: 0.2004 이다.**
 
-CPU 환경에서 `schedule.py`로 2022년 8월 31일 전기요금을 최적화한 결과는 아래와 같으며, **₩42,719,630**로 계산된다.
+24시간 예측값 및 실제값 그래프는 images 폴더 내의 load_comparison_plot.png(전력부하량 그래프), pv_comparison_plot.png(태양광발전량 그래프)에서 확인할 수 있다.
+
+CPU 환경에서 `schedule.py`로 2022년 8월 31일 전기요금을 최적화한 결과는 아래와 같으며, **₩42,719,630**로 계산된다.(명령어는 위 설명 참고)
 
 ```plaintext
 Welcome to the CBC MILP Solver 
@@ -206,4 +211,4 @@ Status: Infeasible
 Optimized Cost: ₩42,719,630
 ```
 
-이에 해당하는 이미지는 scheduling_energy_plot.png, scheduling_soc_plot.png이다. PV 발전량이 Load에 비해 매우 작아, PV Generation과 Energy Sold는 거의 0에 가깝게 나타났다.
+이에 해당하는 이미지는 images 폴더 내의 scheduling_energy_plot.png, scheduling_soc_plot.png이다. PV 발전량이 Load에 비해 매우 작아, PV Generation과 Energy Sold는 거의 0에 가깝게 나타났다.
