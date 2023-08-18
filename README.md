@@ -168,7 +168,7 @@ CPU 환경에서 `predict.py` 로 태양광 발전량/부하를 예측한 결과
 **태양광 발전량 예측 오차는 MAE: 0.1551, MSE: 0.0402, RMSE: 0.2004 이다.**
 
 24시간 예측값 및 실제값 그래프는 images 폴더 내의 load_comparison_plot.png(전력부하량 그래프), pv_comparison_plot.png(태양광발전량 그래프)에서 확인할 수 있다.
-![load_comparison_plot](images/load_comparison_plot.png) ![pv_comparison_plot](images/pv_comparison_plot.png)
+<img src="images/load_comparison_plot.png" width="200"> <img src="images/pv_comparison_plot.png" width="200">
 
 CPU 환경에서 `schedule.py`로 2022년 8월 31일 전기요금을 최적화한 결과는 아래와 같으며, **₩42,719,630**로 계산된다.(명령어는 위 설명 참고)
 
