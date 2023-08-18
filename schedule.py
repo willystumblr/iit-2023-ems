@@ -59,6 +59,10 @@ def define_problem(prob: Any,
         # Battery charging and discharging
         prob += energy_charged[i] <= max_capacity - battery_level[i]
         prob += energy_discharged[i] <= battery_level[i+1]
+        
+
+        # Energy can only be sold if it's in excess of the load.
+        prob += energy_sold[i] <= pv_gen[i] + energy_discharged[i]*efficiency - load[i]
 
     # Battery level update
         if i < num_hours - 1:
