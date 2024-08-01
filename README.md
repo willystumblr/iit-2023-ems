@@ -1,4 +1,4 @@
-# GIST ict-2023 EMS-Track: Team MYsolar
+# GIST iit-2023 EMS-Track: Team MYsolar
 
 GIST 창의융합경진대회 2023 EMS-Track, MYsolar 팀 GitHub Repo
 
